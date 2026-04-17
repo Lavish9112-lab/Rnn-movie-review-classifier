@@ -5,16 +5,17 @@ import pickle
 from tensorflow.keras.preprocessing import sequence
 
 # =========================
-# Load Model and Files
+# Load Model
 # =========================
-
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("simple_rnn_imdb.h5")
+    return tf.keras.models.load_model("simple_rnn_imdb.h5", compile=False)
 
 model = load_model()
 
-
+# =========================
+# Load Files
+# =========================
 @st.cache_data
 def load_files():
     with open("config.pkl", "rb") as f:
@@ -35,9 +36,8 @@ max_len = config["max_len"]
 max_features = config["max_features"]
 
 # =========================
-# Preprocessing Function
+# Preprocessing
 # =========================
-
 def preprocess_text(text):
     words = text.lower().split()
 
@@ -54,7 +54,6 @@ def preprocess_text(text):
 # =========================
 # Decode Function
 # =========================
-
 def decode_review(encoded_review):
     return " ".join([reverse_word_index.get(i - 3, "?") for i in encoded_review])
 
@@ -62,7 +61,6 @@ def decode_review(encoded_review):
 # =========================
 # Streamlit UI
 # =========================
-
 st.set_page_config(page_title="IMDB Sentiment Analyzer", layout="centered")
 
 st.title("🎬 IMDB Movie Review Sentiment Analysis")
@@ -73,7 +71,6 @@ user_input = st.text_area("✍️ Enter your review here:", height=150)
 # =========================
 # Button Logic
 # =========================
-
 if st.button("🔍 Analyze Sentiment"):
 
     if user_input.strip() == "":
